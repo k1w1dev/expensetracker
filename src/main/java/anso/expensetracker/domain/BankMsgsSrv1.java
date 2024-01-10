@@ -1,4 +1,4 @@
-package domain;
+package anso.expensetracker.domain;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 

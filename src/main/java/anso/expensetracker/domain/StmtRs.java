@@ -1,4 +1,4 @@
-package domain;
+package anso.expensetracker.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -16,4 +16,15 @@ public class StmtRs {
 
   @JacksonXmlProperty(localName = "BANKTRANLIST")
   private BankTransList bankTransList;
+
+  public BankAcctFrom getBankAcctFrom() {
+    return bankAcctFrom;
+  }
+
+  public void setBankAcctFrom(BankAcctFrom bankAcctFrom) {
+    this.bankAcctFrom = bankAcctFrom;
+  }
+
+  @JacksonXmlProperty(localName = "BANKACCTFROM")
+  private BankAcctFrom bankAcctFrom;
 }

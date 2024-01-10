@@ -1,17 +1,15 @@
+package anso.expensetracker.adapter.in.parser;
+
 import org.junit.jupiter.api.Test;
-import parser.OfxParser;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class OfxParserTest {
-
 
   public static final String FULL_CONTENT = """
           <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -87,7 +85,7 @@ class OfxParserTest {
     bw.close();
 
     underTest = new OfxParser();
-    var result  = underTest.parseFile(testFile);
+    var result  = underTest.parseOfxFile(testFile);
 
     assertNotNull(result);
     assertEquals(2, result.getBankMsgsRsv1().getStmtTrnRs().getStmtRs().getBankTransList().getTransactions().size());
@@ -104,5 +102,4 @@ class OfxParserTest {
     assertTrue(txns.stream().anyMatch(txn -> txn.getAmount().equals("500.00")));
     assertTrue(txns.stream().anyMatch(txn -> txn.getName().equals("Incoming &  EMI")));
   }
-
 }
