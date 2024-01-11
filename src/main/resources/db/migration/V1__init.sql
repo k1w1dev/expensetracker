@@ -7,10 +7,11 @@ CREATE TABLE IF NOT EXISTS bank_account (
 
 CREATE TABLE IF NOT EXISTS transaction (
     id UUID PRIMARY KEY,
-    bank_account_id text,
+    bank_account_id UUID,
+    txn_date DATE,
     fit_id text,
     type text,
     amount text,
-    name text,
+    payee text,
     memo text
 );

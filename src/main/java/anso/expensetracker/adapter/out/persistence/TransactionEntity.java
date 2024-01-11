@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -25,7 +27,10 @@ public class TransactionEntity {
   UUID id;
 
   @Column(name = "bank_account_id")
-  String bankAccountId;
+  UUID bankAccountId;
+
+  @Column(name = "txn_date")
+  LocalDate txnDate;
 
   @Column(name = "fit_id")
   String fitId;
@@ -34,18 +39,23 @@ public class TransactionEntity {
   String type;
 
   @Column(name = "amount")
-  String amount;
+  BigDecimal amount;
 
   @Column(name = "memo")
   String memo;
 
-  public static TransactionEntity fromTransaction(Transaction transaction) {
+  @Column(name = "payee")
+  String payee;
+
+  public static TransactionEntity fromTransaction(Transaction transaction, UUID bankAccountId) {
     var txn = new TransactionEntity();
-    txn.setType(transaction.getType());
-    txn.setAmount(transaction.getAmount());
-    txn.setMemo("Some Memo");
-    txn.setFitId("fitId");
-    txn.setBankAccountId("bankAccountId");
+    txn.setTxnDate(transaction.date());
+    txn.setType(transaction.type().getText());
+    txn.setAmount(transaction.amount());
+    txn.setPayee(transaction.payee());
+    txn.setMemo(transaction.memo());
+    txn.setFitId(transaction.fitId());
+    txn.setBankAccountId(bankAccountId);
     return txn;
   }
 }

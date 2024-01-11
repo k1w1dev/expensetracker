@@ -1,6 +1,6 @@
 package anso.expensetracker.adapter.in.web.controller;
 
-import anso.expensetracker.port.in.OfxContent;
+import anso.expensetracker.port.in.ImportOfxContent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApplicationController {
 
   @Autowired
-  private OfxContent ofxContent;
+  private ImportOfxContent importOfxContent;
 
   @PostMapping(value = "/import")
-  public void importOfxContent(@RequestBody String contents) throws JsonProcessingException {
-    ofxContent.parseOfxContent(contents);
+  public String importOfxContent(@RequestBody String contents) throws JsonProcessingException {
+    var ofx = importOfxContent.importOfxContent(contents);
+    var txnCount = ofx.getTransactions().size();
+    return "Loaded %d transactions".formatted(txnCount);
   }
 }

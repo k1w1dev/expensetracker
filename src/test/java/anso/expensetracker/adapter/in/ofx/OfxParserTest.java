@@ -1,4 +1,4 @@
-package anso.expensetracker.adapter.in.parser;
+package anso.expensetracker.adapter.in.ofx;
 
 import org.junit.jupiter.api.Test;
 
@@ -6,8 +6,12 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class OfxParserTest {
 
@@ -74,7 +78,7 @@ class OfxParserTest {
               </BANKMSGSRSV1>
           </OFX>
           """;
-  OfxParser underTest;
+  ImportOfxParser underTest;
 
   @Test
   void fileContentsCanBeParsedCorrectly() throws IOException {
@@ -84,22 +88,21 @@ class OfxParserTest {
     bw.write(FULL_CONTENT);
     bw.close();
 
-    underTest = new OfxParser();
+    underTest = new ImportOfxParser();
     var result  = underTest.parseOfxFile(testFile);
 
     assertNotNull(result);
-    assertEquals(2, result.getBankMsgsRsv1().getStmtTrnRs().getStmtRs().getBankTransList().getTransactions().size());
+    var txns = result.getTransactions();
+    assertEquals(2, txns.size());
 
-    var txns = result.getBankMsgsRsv1().getStmtTrnRs().getStmtRs().getBankTransList().getTransactions();
+    assertTrue(txns.stream().anyMatch(txn -> txn.type().getText().equals("DEBIT")));
+    assertTrue(txns.stream().anyMatch(txn -> txn.date().equals(LocalDate.of(2023, 12, 30))));
+    assertTrue(txns.stream().anyMatch(txn -> txn.amount().equals(new BigDecimal("305.76"))));
+    assertTrue(txns.stream().anyMatch(txn -> txn.payee().equals("PAK N SAVE LOWER HUT")));
 
-    assertTrue(txns.stream().anyMatch(txn -> txn.getType().equals("DEBIT")));
-    assertTrue(txns.stream().anyMatch(txn -> txn.getDate().equals("20231230")));
-    assertTrue(txns.stream().anyMatch(txn -> txn.getAmount().equals("-305.76")));
-    assertTrue(txns.stream().anyMatch(txn -> txn.getName().equals("PAK N SAVE LOWER HUT")));
-
-    assertTrue(txns.stream().anyMatch(txn -> txn.getType().equals("CREDIT")));
-    assertTrue(txns.stream().anyMatch(txn -> txn.getDate().equals("20231230")));
-    assertTrue(txns.stream().anyMatch(txn -> txn.getAmount().equals("500.00")));
-    assertTrue(txns.stream().anyMatch(txn -> txn.getName().equals("Incoming &  EMI")));
+    assertTrue(txns.stream().anyMatch(txn -> txn.type().getText().equals("CREDIT")));
+    assertTrue(txns.stream().anyMatch(txn -> txn.date().equals(LocalDate.of(2023, 12, 30))));
+    assertTrue(txns.stream().anyMatch(txn -> txn.amount().equals(new BigDecimal("500.00"))));
+    assertTrue(txns.stream().anyMatch(txn -> txn.payee().equals("Incoming &  EMI")));
   }
 }

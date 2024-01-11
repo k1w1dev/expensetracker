@@ -1,17 +1,16 @@
-package anso.expensetracker.domain;
+package anso.expensetracker.adapter.in.ofx;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import lombok.AccessLevel;
+import lombok.Setter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StmtTrnRs {
+@Setter(AccessLevel.PACKAGE)
+class StmtTrnRs {
 
-  public StmtRs getStmtRs() {
+  StmtRs getStmtRs() {
     return stmtRs;
-  }
-
-  public void setStmtRs(StmtRs stmtRs) {
-    this.stmtRs = stmtRs;
   }
 
   @JacksonXmlProperty(localName = "STMTRS")

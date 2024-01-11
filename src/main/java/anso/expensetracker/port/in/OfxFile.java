@@ -1,6 +1,6 @@
 package anso.expensetracker.port.in;
 
-import anso.expensetracker.domain.OFX;
+import anso.expensetracker.adapter.in.ofx.OFX;
 
 import java.io.File;
 import java.io.IOException;

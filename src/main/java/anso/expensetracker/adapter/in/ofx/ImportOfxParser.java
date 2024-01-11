@@ -1,13 +1,9 @@
-package anso.expensetracker.adapter.in.parser;
+package anso.expensetracker.adapter.in.ofx;
 
-import anso.expensetracker.port.in.OfxContent;
-import anso.expensetracker.port.out.PersistencePort;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import anso.expensetracker.domain.OFX;
 import anso.expensetracker.port.in.OfxFile;
+import anso.expensetracker.port.out.PersistencePort;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +15,7 @@ import java.io.InputStream;
 
 
 @Component
-class OfxParser implements OfxFile, OfxContent {
+class ImportOfxParser implements OfxFile{
 
   @Autowired
   private PersistencePort persistencePort;
@@ -29,13 +25,5 @@ class OfxParser implements OfxFile, OfxContent {
     ObjectMapper objectMapper = new XmlMapper();
     InputStream inputStream = new BufferedInputStream(new FileInputStream(ofxFile));
     return objectMapper.readValue(inputStream, OFX.class);
-  }
-
-  @Override
-  public OFX parseOfxContent(String content) throws JsonProcessingException {
-    ObjectMapper objectMapper = new XmlMapper();
-    var ofx =  objectMapper.readValue(content, OFX.class);
-    persistencePort.saveTransactions(ofx.getBankMsgsRsv1().getStmtTrnRs().getStmtRs().getBankTransList().getTransactions());
-    return ofx;
   }
 }
