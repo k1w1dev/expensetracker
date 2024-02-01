@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,9 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-@Table(name = "transaction", schema = "public")
+@Table(name = "transaction",
+        schema = "public",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"id", "fit_id", "bank_account_id"}))
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

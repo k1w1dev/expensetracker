@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface PersistencePort {
 
-  void saveTransactions(List<Transaction> transactions, UUID bankId);
+  int saveTransactions(List<Transaction> transactions, UUID bankId);
 
   UUID saveBankAccount(BankAccount bankAccount);
 }

@@ -20,7 +20,7 @@ public class ImportOfxTransactions implements ImportOfxContent {
   }
 
   @Override
-  public OFX importOfxContent(String content) throws JsonProcessingException {
+  public int importOfxContent(String content) throws JsonProcessingException {
     ObjectMapper objectMapper = new XmlMapper();
     var ofx =  objectMapper.readValue(content, OFX.class);
 
@@ -28,11 +28,7 @@ public class ImportOfxTransactions implements ImportOfxContent {
     final var bankId = persistencePort.saveBankAccount(bankAccount);
 
     var statementTransactions = ofx.getTransactions();
-    persistencePort.saveTransactions(statementTransactions, bankId);
-
-
-
-    return ofx;
+    return persistencePort.saveTransactions(statementTransactions, bankId);
   }
 
 }

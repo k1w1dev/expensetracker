@@ -15,8 +15,7 @@ public class ApplicationController {
 
   @PostMapping(value = "/import")
   public String importOfxContent(@RequestBody String contents) throws JsonProcessingException {
-    var ofx = importOfxContent.importOfxContent(contents);
-    var txnCount = ofx.getTransactions().size();
-    return "Loaded %d transactions".formatted(txnCount);
+    var importedTransactions = importOfxContent.importOfxContent(contents);
+    return "Loaded %d transactions".formatted(importedTransactions);
   }
 }
